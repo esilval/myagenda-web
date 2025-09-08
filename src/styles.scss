@@ -1,1 +1,53 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Tema global */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --border: #e5e7eb;
+  --text: #111827;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --primary-600: #1d4ed8;
+  --success: #10b981;
+  --danger: #ef4444;
+  --radius: 10px;
+  --shadow: 0 10px 30px rgba(0,0,0,.06);
+}
+
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; }
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button { cursor: pointer; transition: transform .12s ease, box-shadow .12s ease, background .12s ease; font-weight: 500; }
+button.primary { background: var(--primary); border: 1px solid var(--primary); color: #fff; border-radius: 10px; padding: .55rem .95rem; box-shadow: var(--shadow); }
+button.primary:hover { background: var(--primary-600); }
+button.small { padding: .35rem .65rem; border-radius: 10px; border: 1px solid var(--border); background: var(--panel); }
+button.small:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 1rem; }
+
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow); }
+
+.table { width: 100%; border-collapse: collapse; border-radius: var(--radius); overflow: hidden; }
+.table thead th { background: #f3f4f6; color: #374151; font-weight: 600; }
+.table th, .table td { border-bottom: 1px solid #f3f4f6; padding: .65rem .8rem; text-align: left; }
+.table tbody tr:hover { background: #f9fafb; }
+
+.chip { display:inline-flex; align-items:center; gap:.35rem; padding:.1rem .5rem; border-radius:9999px; border:1px solid var(--border); background:#f9fafb; color:#374151; font-size:.8rem; }
+.chip .dot { width:.5rem; height:.5rem; border-radius:9999px; }
+.chip.success .dot { background: #10b981; }
+.chip.muted .dot { background: #9ca3af; }
+
+.modal-backdrop { backdrop-filter: blur(1px); }
+
+input, select, textarea { outline: none; transition: border-color .12s ease, box-shadow .12s ease, background .12s ease; border-radius: 10px; background: #fcfcfd; }
+input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,.15); background: #fff; }
+
+.badge-active { color: #065f46; background: #d1fae5; padding: .1rem .5rem; border-radius: 9999px; font-size: .75rem; }
+.badge-inactive { color: #7c2d12; background: #ffedd5; padding: .1rem .5rem; border-radius: 9999px; font-size: .75rem; }

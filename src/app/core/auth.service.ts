@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from './api-tokens';
 import { StorageService } from './storage.service';
@@ -13,7 +13,9 @@ export class AuthService {
   private readonly storage = inject(StorageService);
 
   private readonly tokenKey = 'myagenda.token';
-  private user: User | null = null;
+  private readonly userSig = signal<User | null>(null);
+  // Para plantillas: usar auth.user() (signal) en lugar de propiedad mutable
+  user = () => this.userSig();
 
   get token(): string | null {
     return this.storage.getItem(this.tokenKey);
@@ -23,9 +25,7 @@ export class AuthService {
     return !!this.token;
   }
 
-  get currentUser(): User | null {
-    return this.user;
-  }
+  get currentUser(): User | null { return this.userSig(); }
 
   login(identifier: string, password: string) {
     return this.http.post<LoginResponse>(`${this.baseUrl}/login`, { identifier, password });
@@ -39,14 +39,9 @@ export class AuthService {
     return this.http.get<User>(`${this.baseUrl}/auth`);
   }
 
-  setUser(u: User | null) {
-    this.user = u;
-  }
+  setUser(u: User | null) { this.userSig.set(u); }
 
-  logout() {
-    this.storage.removeItem(this.tokenKey);
-    this.user = null;
-  }
+  logout() { this.storage.removeItem(this.tokenKey); this.userSig.set(null); }
 }
 
 

@@ -1,14 +1,80 @@
-<header style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid #e5e7eb;position:sticky;top:0;background:#fff;z-index:10;">
-  <strong>MyAgenda</strong>
-  <nav style="display:flex;gap:1rem;align-items:center;">
-    <a routerLink="/" style="text-decoration:none;">Dashboard</a>
-    <a routerLink="/clients" style="text-decoration:none;">Clientes</a>
-    <a routerLink="/companies" style="text-decoration:none;">Compañías</a>
-    <span *ngIf="auth.currentUser as u">Hola, {{ u.name || u.email }}</span>
-    <button *ngIf="auth.isAuthenticated" (click)="logout()" style="padding:.25rem .5rem">Salir</button>
-  </nav>
-</header>
+<div class="flex min-h-screen bg-gray-100 font-sans antialiased">
+  <!-- Overlay móvil -->
+  <div *ngIf="mobileSidebarOpen()" class="fixed inset-0 bg-black/40 md:hidden z-30" (click)="closeSidebar()"></div>
 
-<div style="padding:1rem;">
-  <router-outlet />
+  <!-- Sidebar desktop -->
+  <aside *ngIf="!isLogin()" class="hidden md:flex md:flex-col w-64 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-40">
+    <div class="flex items-center justify-center h-16 border-b border-gray-200">
+      <h1 class="text-2xl font-bold text-indigo-600 tracking-wider">MyAgenda</h1>
+    </div>
+    <nav class="flex flex-col flex-grow p-4 space-y-2">
+      <a routerLink="/" routerLinkActive="bg-indigo-600 !text-white" [routerLinkActiveOptions]="{exact:true}"
+         class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+        <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a routerLink="/clients" routerLinkActive="bg-indigo-600 !text-white"
+         class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+        <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Clientes
+      </a>
+      <a routerLink="/companies" routerLinkActive="bg-indigo-600 !text-white"
+         class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+        <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        Compañías
+      </a>
+      <a routerLink="/profile" routerLinkActive="bg-indigo-600 !text-white"
+         class="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+        <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Perfil
+      </a>
+    </nav>
+    <div class="p-4 border-t border-gray-200" *ngIf="auth.user() as u">
+      <div class="flex items-center">
+        <img class="h-10 w-10 rounded-full object-cover" src="https://ui-avatars.com/api/?name={{u.name || u.email}}&background=6366f1&color=fff&bold=true" alt="User Avatar">
+        <div class="ml-3">
+          <p class="text-sm font-medium text-gray-900">{{ u.name || u.email }}</p>
+          <a routerLink="/profile" class="text-xs text-gray-500 hover:text-indigo-600">Ver perfil</a>
+        </div>
+      </div>
+      <button (click)="logout()" class="mt-4 flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200">Salir</button>
+      </div>
+  </aside>
+
+  <!-- Sidebar móvil -->
+  <aside *ngIf="mobileSidebarOpen()" class="md:hidden fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-40">
+    <div class="flex items-center justify-between h-16 border-b border-gray-200 px-4">
+      <h1 class="text-xl font-bold text-indigo-600 tracking-wider">MyAgenda</h1>
+      <button class="text-gray-500 hover:text-gray-700" (click)="closeSidebar()">✕</button>
+    </div>
+    <nav class="flex flex-col p-4 space-y-2">
+      <a routerLink="/" (click)="closeSidebar()" routerLinkActive="bg-indigo-600 !text-white" [routerLinkActiveOptions]="{exact:true}"
+         class="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">
+        <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </a>
+      <a routerLink="/clients" (click)="closeSidebar()" routerLinkActive="bg-indigo-600 !text-white"
+         class="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">
+        <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Clientes
+      </a>
+      <a routerLink="/companies" (click)="closeSidebar()" routerLinkActive="bg-indigo-600 !text-white"
+         class="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">
+        <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        Compañías
+      </a>
+      <a routerLink="/profile" (click)="closeSidebar()" routerLinkActive="bg-indigo-600 !text-white"
+         class="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">
+        <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Perfil
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Área de contenido -->
+  <div [ngClass]="isLogin() ? 'flex-1' : 'flex-1 md:ml-64'">
+    <router-outlet />
   </div>
+</div>
+
+<app-toasts />

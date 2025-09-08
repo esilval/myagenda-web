@@ -1,0 +1,89 @@
+<section class="toolbar">
+  <h2>Clientes</h2>
+  <div class="filters">
+    <input type="text" placeholder="Buscar..." [value]="q()" (input)="onSearchChange(($any($event.target)).value)" />
+    <select [value]="status()" (change)="onStatusChange(($any($event.target)).value)">
+      <option value="">Todos</option>
+      <option value="ACTIVE">Activos</option>
+      <option value="INACTIVE">Inactivos</option>
+    </select>
+    <label class="checkbox">
+      <input type="checkbox" [checked]="includeCompany()" (change)="onIncludeCompanyChange(($any($event.target)).checked)" />
+      Incluir compañía
+    </label>
+    <button class="primary" (click)="openCreate()">Nuevo</button>
+  </div>
+</section>
+
+<section class="card">
+  <div *ngIf="loading()">
+    <app-skeleton [height]="38"></app-skeleton>
+    <div style="height:.5rem"></div>
+    <app-skeleton [height]="38"></app-skeleton>
+    <div style="height:.5rem"></div>
+    <app-skeleton [height]="38"></app-skeleton>
+  </div>
+  <div *ngIf="error()" class="error">{{ error() }}</div>
+  <table class="table" *ngIf="!loading() && !error()">
+    <thead>
+      <tr>
+        <th>Contacto</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Estado</th>
+        <th>Compañía</th>
+        <th style="width:160px;">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of items()">
+        <td>{{ c.contact_name }}</td>
+        <td>{{ c.email || '—' }}</td>
+        <td>{{ c.phone || '—' }}</td>
+        <td><span [class.badge-active]="c.status==='ACTIVE'" [class.badge-inactive]="c.status==='INACTIVE'">{{ c.status }}</span></td>
+        <td>{{ c.company?.business_name || '—' }}</td>
+        <td>
+          <button class="small" (click)="startEdit(c)">Editar</button>
+          <button class="small danger" (click)="confirmDelete(c)">Eliminar</button>
+        </td>
+      </tr>
+      <tr *ngIf="items().length===0">
+        <td colspan="6" style="text-align:center; color:#6b7280;">Sin resultados</td>
+      </tr>
+    </tbody>
+  </table>
+  <app-empty-state *ngIf="!loading() && !error() && items().length===0" title="Aún no hay clientes" description="Crea tu primer cliente para empezar a trabajar." ctaText="Nuevo" (cta)="openCreate()" />
+</section>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="showForm()" (click)="closeForm()"></div>
+<div class="modal" *ngIf="showForm()">
+  <h3 style="margin-top:0;">{{ editingId() ? 'Editar cliente' : 'Nuevo cliente' }}</h3>
+  <form (ngSubmit)="submitForm()">
+    <label>Contacto</label>
+    <input type="text" [(ngModel)]="form.contact_name" name="contact_name" required />
+    <label>Email</label>
+    <input type="email" [(ngModel)]="form.email" name="email" />
+    <label>Teléfono</label>
+    <input type="text" [(ngModel)]="form.phone" name="phone" />
+    <label>Compañía</label>
+    <select [(ngModel)]="form.company_id" name="company_id">
+      <option value="">—</option>
+      <option *ngFor="let co of companyOptions()" [value]="co.id">{{ co.business_name }}</option>
+    </select>
+    <div class="actions">
+      <button type="button" (click)="closeForm()">Cancelar</button>
+      <button class="primary" type="submit" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+    </div>
+    <div class="error" *ngIf="formError()">{{ formError() }}</div>
+  </form>
+</div>
+
+<section class="pagination" *ngIf="total()>0">
+  <button (click)="changePage(-1)" [disabled]="page()<=1">Anterior</button>
+  <span>Página {{ page() }} de {{ maxPage() }}</span>
+  <button (click)="changePage(1)" [disabled]="page()>=maxPage()">Siguiente</button>
+  <span class="total">Total: {{ total() }}</span>
+</section>
+
+

@@ -9,17 +9,40 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   template: `
-    <main style="max-width:420px;margin:4rem auto;padding:2rem;border:1px solid #e5e7eb;border-radius:8px;">
-      <h1 style="margin:0 0 1rem;">Iniciar sesión</h1>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <label>Correo o Nickname</label>
-        <input formControlName="identifier" type="text" style="width:100%;padding:.5rem;margin:.25rem 0 1rem;" />
-        <label>Contraseña</label>
-        <input formControlName="password" type="password" style="width:100%;padding:.5rem;margin:.25rem 0 1rem;" />
-        <button type="submit" [disabled]="form.invalid || loading" style="padding:.5rem 1rem">Entrar</button>
-        <p *ngIf="error" style="color:#b91c1c;margin-top:1rem;">{{ error }}</p>
-      </form>
-    </main>
+    <section class="min-h-screen grid lg:grid-cols-2">
+      <div class="hidden lg:flex bg-indigo-600 text-white p-12 flex-col justify-between">
+        <div><h1 class="text-3xl font-bold tracking-wider">MyAgenda</h1></div>
+        <div class="max-w-md">
+          <h2 class="text-4xl font-bold mb-4">Bienvenido de nuevo</h2>
+          <p class="text-indigo-200 text-lg">Gestiona tus compañías y clientes con un flujo simple y eficiente. Toda tu información, en un solo lugar.</p>
+        </div>
+        <div class="text-sm text-indigo-300">&copy; 2024 MyAgenda Inc. Todos los derechos reservados.</div>
+      </div>
+      <div class="w-full flex items-center justify-center p-6 sm:p-12">
+        <div class="w-full max-w-md">
+          <div class="text-center lg:text-left mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">Iniciar sesión en tu cuenta</h2>
+            <p class="text-gray-500 mt-2">O <a class="text-indigo-600 hover:text-indigo-500 font-medium">crea una cuenta nueva</a></p>
+          </div>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Correo o Nickname</label>
+              <input formControlName="identifier" type="text" class="mt-1 block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 p-3" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+              <input formControlName="password" type="password" class="mt-1 block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 p-3" />
+            </div>
+            <div class="flex items-center justify-between">
+              <label class="flex items-center text-sm"><input type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" /> <span class="ml-2 text-gray-700">Recordarme</span></label>
+              <a class="text-sm text-indigo-600 hover:text-indigo-500">¿Olvidaste tu contraseña?</a>
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 text-white font-medium py-3 px-4 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" [disabled]="form.invalid || loading">{{ loading ? 'Entrando...' : 'Iniciar Sesión' }}</button>
+            <p *ngIf="error" class="text-sm text-red-700 bg-red-100 p-2 rounded">{{ error }}</p>
+          </form>
+        </div>
+      </div>
+    </section>
   `,
 })
 export class LoginComponent {
