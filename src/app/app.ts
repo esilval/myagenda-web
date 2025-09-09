@@ -31,7 +31,7 @@ export class App {
   }
 
   isLogin(): boolean {
-    return this.router.url.startsWith('/login');
+    return this.router.url.startsWith('/login') || this.router.url.startsWith('/register');
   }
 
   toggleSidebar() { this.mobileSidebarOpen.set(!this.mobileSidebarOpen()); }

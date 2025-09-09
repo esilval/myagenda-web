@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyAgenda - Crear Cuenta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="w-full max-w-5xl flex rounded-2xl shadow-2xl overflow-hidden m-4">
+            <!-- Panel Izquierdo - Decorativo -->
+            <div class="hidden md:flex flex-col justify-between w-1/2 p-12 bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
+                <div>
+                    <h1 class="text-3xl font-bold tracking-wider">MyAgenda</h1>
+                    <p class="mt-4 text-indigo-100">La herramienta definitiva para organizar tu éxito.</p>
+                </div>
+                <div class="mt-8">
+                    <p class="text-lg italic">"La organización no es un destino, es el vehículo que te lleva a él."</p>
+                    <p class="text-sm text-indigo-200 mt-2">- Anónimo</p>
+                </div>
+            </div>
+
+            <!-- Panel Derecho - Formulario -->
+            <div class="w-full md:w-1/2 bg-white p-8 md:p-12 flex flex-col justify-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Crea tu Cuenta</h2>
+                <p class="text-gray-500 mb-8">Comienza a organizar tu flujo de trabajo en segundos.</p>
+                
+                <form action="#" method="POST" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                        <input type="text" name="name" id="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3">
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                        <input type="email" name="email" id="email" autocomplete="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3">
+                    </div>
+
+                    <div>
+                        <label for="nickname" class="block text-sm font-medium text-gray-700">Nickname</label>
+                        <input type="text" name="nickname" id="nickname" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3">
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                        <input type="password" name="password" id="password" autocomplete="new-password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3">
+                    </div>
+
+                    <div>
+                        <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirmar Contraseña</label>
+                        <input type="password" name="confirm-password" id="confirm-password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3">
+                    </div>
+
+                    <div>
+                        <label for="company-name" class="block text-sm font-medium text-gray-700">Nombre Compañía</label>
+                        <input type="text" name="company-name" id="company-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3">
+                    </div>
+
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Crear Cuenta
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        ¿Ya tienes una cuenta?
+                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                            Inicia sesión aquí
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+

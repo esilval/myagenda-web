@@ -5,6 +5,7 @@ import { StorageService } from './storage.service';
 
 type LoginResponse = { access_token: string; token_type: string; expires_in: number };
 type User = { id: string; name: string; email: string; nickname?: string | null; company?: string | null; status: 'ACTIVE' | 'INACTIVE'; created_at: string; updated_at: string };
+type RegisterRequest = { name: string; email: string; nickname?: string; password: string; company?: string };
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -29,6 +30,10 @@ export class AuthService {
 
   login(identifier: string, password: string) {
     return this.http.post<LoginResponse>(`${this.baseUrl}/login`, { identifier, password });
+  }
+
+  register(userData: RegisterRequest) {
+    return this.http.post<LoginResponse>(`${this.baseUrl}/users`, userData);
   }
 
   saveToken(token: string) {
