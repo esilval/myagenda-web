@@ -1,19 +1,35 @@
-<section class="toolbar">
-  <h2>Clientes</h2>
-  <div class="filters">
-    <input type="text" placeholder="Buscar..." [value]="q()" (input)="onSearchChange(($any($event.target)).value)" />
-    <select [value]="status()" (change)="onStatusChange(($any($event.target)).value)">
-      <option value="">Todos</option>
-      <option value="ACTIVE">Activos</option>
-      <option value="INACTIVE">Inactivos</option>
-    </select>
-    <label class="checkbox">
-      <input type="checkbox" [checked]="includeCompany()" (change)="onIncludeCompanyChange(($any($event.target)).checked)" />
-      Incluir compañía
-    </label>
-    <button class="primary" (click)="openCreate()">Nuevo</button>
+<main class="p-8">
+<!-- Header de página -->
+<div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
+  <div>
+    <h1 class="text-3xl font-bold text-gray-900">Clientes</h1>
+    <p class="text-gray-500 mt-1">Gestiona y organiza tu base de clientes.</p>
   </div>
-</section>
+  <div>
+    <button class="btn-primary" (click)="openCreate()">
+      <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path
+          d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+      </svg>
+      Nuevo Cliente
+    </button>
+  </div>
+</div>
+
+<!-- Buscador -->
+<div class="card mb-6">
+  <div class="relative">
+    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+      <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+          clip-rule="evenodd" />
+      </svg>
+    </div>
+    <input class="form-input pl-10" type="text" placeholder="Buscar cliente por nombre, email o compañía..."
+      [value]="q()" (input)="onSearchChange(($any($event.target)).value)" />
+  </div>
+</div>
 
 <section class="card">
   <div *ngIf="loading()">
@@ -24,66 +40,111 @@
     <app-skeleton [height]="38"></app-skeleton>
   </div>
   <div *ngIf="error()" class="error">{{ error() }}</div>
-  <table class="table" *ngIf="!loading() && !error()">
+  <table class="data-table" *ngIf="!loading() && !error()">
     <thead>
       <tr>
-        <th>Contacto</th>
-        <th>Email</th>
-        <th>Teléfono</th>
-        <th>Estado</th>
-        <th>Compañía</th>
-        <th style="width:160px;">Acciones</th>
+        <th class="py-3 px-4 uppercase text-xs text-gray-500">Contacto</th>
+        <th class="py-3 px-4 uppercase text-xs text-gray-500">Compañía</th>
+        <th class="py-3 px-4 uppercase text-xs text-gray-500">Teléfono</th>
+        <th class="py-3 px-4 uppercase text-xs text-gray-500">Estado</th>
+        <th class="py-3 px-4 uppercase text-xs text-gray-500 text-right">Acciones</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let c of items()">
-        <td>{{ c.contact_name }}</td>
-        <td>{{ c.email || '—' }}</td>
-        <td>{{ c.phone || '—' }}</td>
-        <td><span [class.badge-active]="c.status==='ACTIVE'" [class.badge-inactive]="c.status==='INACTIVE'">{{ c.status }}</span></td>
-        <td>{{ c.company?.business_name || '—' }}</td>
-        <td>
-          <button class="small" (click)="startEdit(c)">Editar</button>
-          <button class="small danger" (click)="confirmDelete(c)">Eliminar</button>
+        <td class="py-3 px-4">
+          <div class="flex items-center">
+            <div
+              class="h-10 w-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-semibold">
+              {{ ((c.contact_name||'').split(' ')[0] || '').charAt(0) }}{{ ((c.contact_name||'').split(' ')[1] ||
+              '').charAt(0) }}
+            </div>
+            <div class="ml-3">
+              <div class="font-medium text-gray-900">{{ c.contact_name }}</div>
+              <div class="text-gray-500 text-xs">{{ c.email || '—' }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="py-3 px-4">{{ c.company?.business_name || '—' }}</td>
+        <td class="py-3 px-4">{{ c.phone || '—' }}</td>
+        <td class="py-3 px-4"><span class="font-semibold" [class.badge-active]="c.status==='ACTIVE'"
+            [class.badge-inactive]="c.status==='INACTIVE'">{{ c.status==='ACTIVE' ? 'Activo' : 'Inactivo' }}</span></td>
+        <td class="py-3 px-4 text-right">
+          <div class="inline-flex gap-4">
+            <button class="text-indigo-600 font-medium hover:underline" (click)="startEdit(c)">Editar</button>
+            <button class="text-red-600 font-medium hover:underline" (click)="confirmDelete(c)">Eliminar</button>
+          </div>
         </td>
       </tr>
       <tr *ngIf="items().length===0">
-        <td colspan="6" style="text-align:center; color:#6b7280;">Sin resultados</td>
+        <td colspan="5" style="text-align:center; color:#6b7280;">Sin resultados</td>
       </tr>
     </tbody>
   </table>
-  <app-empty-state *ngIf="!loading() && !error() && items().length===0" title="Aún no hay clientes" description="Crea tu primer cliente para empezar a trabajar." ctaText="Nuevo" (cta)="openCreate()" />
+  <app-empty-state *ngIf="!loading() && !error() && items().length===0" title="Aún no hay clientes"
+    description="Crea tu primer cliente para empezar a trabajar." ctaText="Nuevo" (cta)="openCreate()" />
 </section>
 
 <!-- Modal -->
-<div class="modal-backdrop" *ngIf="showForm()" (click)="closeForm()"></div>
-<div class="modal" *ngIf="showForm()">
-  <h3 style="margin-top:0;">{{ editingId() ? 'Editar cliente' : 'Nuevo cliente' }}</h3>
-  <form (ngSubmit)="submitForm()">
-    <label>Contacto</label>
-    <input type="text" [(ngModel)]="form.contact_name" name="contact_name" required />
-    <label>Email</label>
-    <input type="email" [(ngModel)]="form.email" name="email" />
-    <label>Teléfono</label>
-    <input type="text" [(ngModel)]="form.phone" name="phone" />
-    <label>Compañía</label>
-    <select [(ngModel)]="form.company_id" name="company_id">
-      <option value="">—</option>
-      <option *ngFor="let co of companyOptions()" [value]="co.id">{{ co.business_name }}</option>
-    </select>
-    <div class="actions">
-      <button type="button" (click)="closeForm()">Cancelar</button>
-      <button class="primary" type="submit" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar' }}</button>
+<div class="ui-modal-overlay" *ngIf="showForm()" (click)="closeForm()"></div>
+<div class="ui-modal" *ngIf="showForm()">
+  <div class="ui-modal-card" (click)="$event.stopPropagation()">
+    <div class="ui-modal-header">
+      <h3 class="ui-modal-title">{{ editingId() ? 'Editar Cliente' : 'Nuevo Cliente' }}</h3>
+      <button class="btn-ghost" type="button" (click)="closeForm()">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
-    <div class="error" *ngIf="formError()">{{ formError() }}</div>
-  </form>
+    <form (ngSubmit)="submitForm()" class="space-y-6">
+      <div class="ui-modal-body">
+        <div>
+          <label class="form-label">Contacto</label>
+          <input class="form-input" type="text" [(ngModel)]="form.contact_name" name="contact_name" required />
+        </div>
+        <div>
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" [(ngModel)]="form.email" name="email" />
+        </div>
+        <div>
+          <label class="form-label">Teléfono</label>
+          <input class="form-input" type="text" [(ngModel)]="form.phone" name="phone" />
+        </div>
+        <div>
+          <label class="form-label">Compañía</label>
+          <select class="form-select" [(ngModel)]="form.company_id" name="company_id">
+            <option value="">—</option>
+            <option *ngFor="let co of companyOptions()" [value]="co.id">{{ co.business_name }}</option>
+          </select>
+        </div>
+        <div class="error" *ngIf="formError()">{{ formError() }}</div>
+      </div>
+      <div class="ui-modal-footer">
+        <button type="button" class="btn-ghost" (click)="closeForm()">Cancelar</button>
+        <button class="btn-primary" type="submit" [disabled]="saving()">{{ saving() ? 'Guardando...' : 'Guardar Cliente'
+          }}</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<section class="pagination" *ngIf="total()>0">
-  <button (click)="changePage(-1)" [disabled]="page()<=1">Anterior</button>
-  <span>Página {{ page() }} de {{ maxPage() }}</span>
-  <button (click)="changePage(1)" [disabled]="page()>=maxPage()">Siguiente</button>
-  <span class="total">Total: {{ total() }}</span>
+<section class="mt-4" *ngIf="total()>0">
+  <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 rounded-b-lg">
+    <div class="text-sm text-gray-700">Mostrando página {{ page() }} de {{ maxPage() }} — Total: {{ total() }}</div>
+    <nav class="pager" aria-label="Pagination">
+      <button class="pager-btn-icon" (click)="changePage(-1)" [class.pager-btn-disabled]="page()<=1" [disabled]="page()<=1">
+        <span class="sr-only">Anterior</span>
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" /></svg>
+      </button>
+      <span class="pager-btn pager-btn-active">{{ page() }}</span>
+      <button *ngIf="page() < maxPage()" class="pager-btn" (click)="changePage(1)">{{ page() + 1 }}</button>
+      <button class="pager-btn-icon" (click)="changePage(1)" [class.pager-btn-disabled]="page()>=maxPage()" [disabled]="page()>=maxPage()">
+        <span class="sr-only">Siguiente</span>
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+      </button>
+    </nav>
+  </div>
 </section>
 
-
+</main>

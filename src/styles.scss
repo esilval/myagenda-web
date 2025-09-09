@@ -51,3 +51,49 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); box-sh
 
 .badge-active { color: #065f46; background: #d1fae5; padding: .1rem .5rem; border-radius: 9999px; font-size: .75rem; }
 .badge-inactive { color: #7c2d12; background: #ffedd5; padding: .1rem .5rem; border-radius: 9999px; font-size: .75rem; }
+
+@layer components {
+  .card { @apply bg-white border border-gray-200 rounded-lg shadow-sm p-6; }
+  .btn { @apply inline-flex items-center justify-center rounded-lg font-medium transition-colors; }
+  .btn-primary { @apply btn text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2; }
+  .btn-ghost { @apply btn text-gray-600 hover:bg-gray-100 px-4 py-2; }
+  .badge { @apply inline-flex items-center rounded-full text-xs font-semibold px-2 py-0.5; }
+  .badge-success { @apply badge bg-green-100 text-green-800; }
+  .badge-danger { @apply badge bg-red-100 text-red-800; }
+  .sidebar-link { @apply flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors; }
+  .sidebar-link-active { @apply bg-indigo-600 !text-white; }
+  .form-label { @apply block text-sm font-medium text-gray-700 mb-2; }
+  .form-input { @apply w-full rounded-xl border border-gray-300 bg-white p-3.5 shadow-sm focus:border-indigo-500 focus:ring-indigo-500; }
+  .form-select { @apply w-full rounded-xl border border-gray-300 bg-white p-3.5 shadow-sm focus:border-indigo-500 focus:ring-indigo-500; }
+  .form-textarea { @apply w-full rounded-xl border border-gray-300 bg-white p-3.5 shadow-sm focus:border-indigo-500 focus:ring-indigo-500; }
+  .modal-backdrop { @apply fixed inset-0 bg-gray-900/50 z-30; }
+  .modal { @apply fixed inset-0 z-40 flex items-center justify-center; }
+  .modal-panel { @apply w-full max-w-3xl rounded-2xl border border-gray-200 bg-white p-8 shadow-2xl relative; }
+  .modal-header { @apply flex items-center justify-between mb-8; }
+  .modal-actions { @apply -mx-8 -mb-8 bg-gray-50 px-8 py-5 rounded-b-2xl flex justify-end gap-3; }
+
+  /* UI Modal (tema mockup) */
+  .ui-modal-overlay { @apply fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40; }
+  .ui-modal { @apply fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-6; }
+  .ui-modal-card { @apply w-full max-w-lg bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 mx-auto mt-16; }
+  .ui-modal-header { @apply flex items-center justify-between px-6 pt-6; }
+  .ui-modal-title { @apply text-3xl font-bold text-gray-900; }
+  .ui-modal-body { @apply px-6 py-5 space-y-5; }
+  .ui-modal-row { @apply grid grid-cols-1 sm:grid-cols-3 gap-4; }
+  .ui-modal-footer { @apply bg-gray-50 px-6 py-4 rounded-b-2xl flex justify-end gap-3; }
+
+  /* Tablas unificadas (mockup) */
+  .data-table { @apply w-full text-sm text-left text-gray-600; }
+  .data-table thead { @apply text-xs text-gray-500 uppercase bg-gray-50; }
+  .data-table th, .data-table td { @apply py-3 px-4; }
+  .data-table tbody tr { @apply border-t border-gray-100; }
+  .data-table tbody tr:hover { @apply bg-gray-50; }
+
+  /* Paginador unificado */
+  .pager { @apply inline-flex items-center rounded-xl border border-gray-300 bg-white overflow-hidden shadow-sm; }
+  .pager-btn { @apply px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50; }
+  .pager-btn-icon { @apply px-3 py-2 text-gray-500 hover:bg-gray-50; }
+  .pager-btn-active { @apply bg-indigo-600 text-white; }
+  .pager-btn-disabled { @apply text-gray-300 hover:bg-white cursor-not-allowed; }
+  .pager-sep { @apply w-px h-6 bg-gray-300; }
+}

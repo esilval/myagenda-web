@@ -1,0 +1,55 @@
+<main class="p-8">
+  <h1 class="text-3xl font-bold text-gray-900 mb-2">Configuración de Perfil</h1>
+  <p class="text-gray-500 mb-6">Actualiza tu información personal y de seguridad.</p>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="auth.user() as u">
+    <!-- Columna izquierda: Información Personal -->
+    <section class="lg:col-span-2 card">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Información Personal</h2>
+      <div class="flex items-center gap-4 mb-6">
+        <img class="h-16 w-16 rounded-full object-cover" src="https://ui-avatars.com/api/?name={{u.name || u.email}}&background=6366f1&color=fff&bold=true" alt="Avatar" />
+        <button type="button" class="btn-ghost">Cambiar</button>
+      </div>
+
+      <form (ngSubmit)="save()" class="space-y-4">
+        <div>
+          <label class="form-label">Nombre</label>
+          <input class="form-input" [(ngModel)]="name" name="name" />
+        </div>
+        <div>
+          <label class="form-label">Nickname</label>
+          <input class="form-input" [(ngModel)]="nickname" name="nickname" />
+        </div>
+        <div>
+          <label class="form-label">Empresa</label>
+          <input class="form-input" [(ngModel)]="company" name="company" />
+        </div>
+        <div class="flex justify-end">
+          <button type="submit" class="btn-primary">Guardar Cambios</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Columna derecha: Seguridad -->
+    <section class="card">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Seguridad</h2>
+      <form (ngSubmit)="save()" class="space-y-4">
+        <div>
+          <label class="form-label">Nueva Contraseña</label>
+          <input class="form-input" [(ngModel)]="password" name="password" type="password" placeholder="••••••••" />
+          <p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres.</p>
+        </div>
+        <div>
+          <label class="form-label">Confirmar Contraseña</label>
+          <input class="form-input" [(ngModel)]="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" />
+        </div>
+        <div *ngIf="passwordError() as err" class="text-sm text-red-600">{{ err }}</div>
+        <div class="flex justify-end">
+          <button class="btn-primary" type="submit" [disabled]="!!passwordError()">Actualizar Contraseña</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</main>
+
+

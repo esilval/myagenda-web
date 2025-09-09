@@ -9,25 +9,7 @@ import { UsersService } from './users.service';
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-    <main class="container" style="max-width:760px;">
-      <h1 style="margin:0 0 1rem;">Perfil</h1>
-      <form (ngSubmit)="save()" style="display:grid; grid-template-columns: 1fr 1fr; gap: .75rem;" *ngIf="auth.user() as u">
-        <label>Nombre</label>
-        <input [(ngModel)]="name" name="name" />
-        <label>Nickname</label>
-        <input [(ngModel)]="nickname" name="nickname" />
-        <label>Empresa</label>
-        <input [(ngModel)]="company" name="company" />
-        <label>Nueva contraseña</label>
-        <input [(ngModel)]="password" name="password" type="password" />
-        <div style="grid-column: span 2; display:flex; justify-content:flex-end; gap:.5rem;">
-          <button type="button" class="small" (click)="reset(u)">Restablecer</button>
-          <button type="submit" class="primary">Guardar</button>
-        </div>
-      </form>
-    </main>
-  `,
+  templateUrl: './profile.html',
 })
 export class ProfilePage {
   readonly auth = inject(AuthService);
@@ -38,13 +20,23 @@ export class ProfilePage {
   nickname = '';
   company = '';
   password = '';
+  confirmPassword = '';
 
   ngOnInit() { const u = this.auth.user(); if (u) this.reset(u); }
 
-  reset(u: any) { this.name = u.name || ''; this.nickname = u.nickname || ''; this.company = u.company || ''; this.password = ''; }
+  reset(u: any) { this.name = u.name || ''; this.nickname = u.nickname || ''; this.company = u.company || ''; this.password = ''; this.confirmPassword = ''; }
+
+  passwordError(): string | null {
+    if (!this.password && !this.confirmPassword) return null; // no cambio
+    if (this.password && this.password.length < 8) return 'La contraseña debe tener al menos 8 caracteres.';
+    if (this.password !== this.confirmPassword) return 'Las contraseñas no coinciden.';
+    return null;
+  }
 
   save() {
     const u = this.auth.user(); if (!u) return;
+    const pwdError = this.passwordError();
+    if (pwdError) { this.toast.show(pwdError, 'error'); return; }
     this.users.update(u.id, { name: this.name, nickname: this.nickname, company: this.company, password: this.password || undefined }).subscribe({
       next: (res) => { this.toast.show('Perfil actualizado', 'success'); this.auth.setUser({ ...u, ...res }); },
       error: (err) => { this.toast.show((err?.error?.error as string) || 'Error actualizando perfil', 'error'); },

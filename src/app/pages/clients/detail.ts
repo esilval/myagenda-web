@@ -1,60 +1,63 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ClientsService, Client } from './clients.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-client-detail',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  template: `
-    <main class="p-6">
-      <a routerLink="/clients" class="text-sm text-indigo-600 hover:text-indigo-800">← Volver a Clientes</a>
-      <h1 class="text-2xl font-bold text-gray-900 mt-2 mb-6">Detalle de Cliente</h1>
-
-      <div *ngIf="client as c" class="bg-white rounded-lg shadow-sm p-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <p class="text-sm text-gray-500">Nombre</p>
-            <p class="text-gray-900 font-medium">{{ c.contact_name }}</p>
-          </div>
-          <div>
-            <p class="text-sm text-gray-500">Compañía</p>
-            <p class="text-gray-900 font-medium">{{ c.company?.business_name || '—' }}</p>
-          </div>
-          <div>
-            <p class="text-sm text-gray-500">Teléfono</p>
-            <p class="text-gray-900 font-medium">{{ c.phone || '—' }}</p>
-          </div>
-          <div>
-            <p class="text-sm text-gray-500">Correo</p>
-            <p class="text-gray-900 font-medium">{{ c.email || '—' }}</p>
-          </div>
-          <div>
-            <p class="text-sm text-gray-500">Estado</p>
-            <span [class]="c.status === 'ACTIVE' ? 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800' : 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800'">
-              {{ c.status === 'ACTIVE' ? 'Activo' : 'Inactivo' }}
-            </span>
-          </div>
-          <div>
-            <p class="text-sm text-gray-500">Creado</p>
-            <p class="text-gray-900 font-medium">{{ c.created_at | date:'medium' }}</p>
-          </div>
-        </div>
-      </div>
-    </main>
-  `,
+  templateUrl: './detail.html',
+  styleUrl: './detail.scss'
 })
-export class ClientDetailPage {
+export class ClientDetailPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly clients = inject(ClientsService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private subscription?: Subscription;
 
   client: Client | null = null;
+  loading = true;
+  error: string | null = null;
 
   ngOnInit(): void {
+    this.loadClient();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
+  private loadClient(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    console.log('loadClient called with ID:', id);
+    
     if (id) {
-      this.clients.get(id).subscribe({ next: (c) => (this.client = c) });
+      this.loading = true;
+      this.error = null;
+      this.client = null;
+      this.cdr.detectChanges(); // Forzar detección de cambios
+      
+      console.log('Loading client with ID:', id);
+      this.subscription = this.clients.get(id).subscribe({ 
+        next: (c) => {
+          console.log('Client loaded successfully:', c);
+          this.client = c;
+          this.loading = false;
+          this.cdr.detectChanges(); // Forzar detección de cambios
+        },
+        error: (err) => {
+          console.error('Error loading client:', err);
+          this.error = err?.error?.error || 'Error al cargar el cliente';
+          this.loading = false;
+          this.cdr.detectChanges(); // Forzar detección de cambios
+        }
+      });
+    } else {
+      this.error = 'ID de cliente no válido';
+      this.loading = false;
+      this.cdr.detectChanges(); // Forzar detección de cambios
     }
   }
 }

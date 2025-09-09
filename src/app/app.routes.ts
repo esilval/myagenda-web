@@ -5,13 +5,17 @@ import { authGuard } from './core/auth.guard';
 import { ClientsPage } from './pages/clients/clients';
 import { CompaniesPage } from './pages/companies/companies';
 import { ProfilePage } from './pages/profile/profile';
-import { ClientDetailPage } from './pages/clients/detail';
+import { homeResolver } from './pages/home/home.resolver';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: '', component: HomeComponent, canActivate: [authGuard] },
+  { path: '', component: HomeComponent, canActivate: [authGuard], resolve: { dashboard: homeResolver }, runGuardsAndResolvers: 'always' },
   { path: 'clients', component: ClientsPage, canActivate: [authGuard] },
-  { path: 'clients/:id', component: ClientDetailPage, canActivate: [authGuard] },
+  {
+    path: 'clients/:id',
+    loadComponent: () => import('./pages/clients/detail').then(m => m.ClientDetailPage),
+    canActivate: [authGuard]
+  },
   { path: 'companies', component: CompaniesPage, canActivate: [authGuard] },
   { path: 'profile', component: ProfilePage, canActivate: [authGuard] },
   { path: '**', redirectTo: '' },

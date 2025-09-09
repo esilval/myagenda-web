@@ -22,7 +22,7 @@ export class ClientsPage {
   readonly items = signal<Client[]>([]);
   readonly total = signal(0);
   readonly page = signal(1);
-  readonly size = signal(10);
+  readonly size = signal(5);
   readonly q = signal('');
   readonly status = signal<'ACTIVE' | 'INACTIVE' | ''>('');
   readonly loading = signal(false);

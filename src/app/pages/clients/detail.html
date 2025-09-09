@@ -1,0 +1,89 @@
+<main class="p-8">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="flex items-center justify-center h-64">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+      <p class="mt-4 text-gray-600">Cargando cliente...</p>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <strong class="font-bold">Error:</strong>
+    <span class="block sm:inline">{{ error }}</span>
+  </div>
+
+  <!-- Client data -->
+  <div *ngIf="client && !loading">
+    <!-- Cabecera -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-center">
+          <div class="h-20 w-20 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-2xl font-bold">
+            {{ (client!.contact_name||'').charAt(0) }}
+          </div>
+          <div class="ml-4">
+            <h1 class="text-3xl font-bold text-gray-900">{{ client!.contact_name }}</h1>
+            <div class="flex items-center mt-1">
+              <span [class]="client!.status === 'ACTIVE' ? 'bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full' : 'bg-red-100 text-red-800 text-sm font-semibold px-3 py-1 rounded-full'">
+                {{ client!.status === 'ACTIVE' ? 'Activo' : 'Inactivo' }}
+              </span>
+              <span class="text-gray-500 ml-3">Cliente desde: {{ client!.created_at | date:'d MMM, y' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 sm:mt-0">
+          <a routerLink="/clients" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700">Editar Cliente</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dos columnas -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Izquierda: Contacto y Zona de peligro -->
+      <div class="lg:col-span-1 space-y-8">
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Información de Contacto</h2>
+          <div class="space-y-4">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Email</h3>
+              <p class="text-gray-900">{{ client!.email || '—' }}</p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Teléfono</h3>
+              <p class="text-gray-900">{{ client!.phone || '—' }}</p>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Compañía</h3>
+              <p class="text-indigo-600 font-medium">{{ client!.company?.business_name || '—' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-500">
+          <h2 class="text-xl font-bold text-red-700 mb-4">Zona de Peligro</h2>
+          <p class="text-sm text-gray-600 mb-4">Inactivar un cliente restringirá su acceso y lo ocultará de las listas principales. Esta acción se puede revertir.</p>
+          <button class="w-full bg-red-600 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:bg-red-700">Inactivar Cliente</button>
+        </div>
+      </div>
+
+      <!-- Derecha: Actividad Reciente -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Actividad Reciente</h2>
+          <ul class="space-y-4">
+            <li class="flex items-start">
+              <div class="bg-indigo-100 rounded-full p-2">
+                <svg class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 01-2 2z"></path></svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-gray-700">Cliente creado en la fecha <span class="font-medium text-gray-900">{{ client!.created_at | date:'d MMM, y' }}</span>.</p>
+                <p class="text-xs text-gray-500">—</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
